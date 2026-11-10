@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS F214 Assignment 1 Part A Analysis</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="tag">CS F214 Logic in Computer Science &middot; Assignment 1 &middot; Part A &middot; Task 6</div>
+  <h1>Analysis and Results</h1>
+  <p>Output, efficiency and memory of every task, measured with the ratio test and on files from the SAT 2002 benchmark</p>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a class="active" href="analysis.html">Analysis and Results</a>
+    <a href="../Doxygen_HTML/html/index.html">Doxygen Documentation</a>
+  </nav>
+</header>
+
+<main>
+
+<section>
+  <h2>Summary</h2>
+  <p>n is the number of nodes in the tree, k is the number of different atoms and h is the height of the tree</p>
+  <table>
+    <tr><th>Task</th><th>Time</th><th>Extra memory</th><th>Measured ratio when n becomes 10n</th></tr>
+    <tr><td>1 Tokenize and infix to prefix</td><td>O(n)</td><td>O(n) for the token lists and the stack</td><td class="num">10.9</td></tr>
+    <tr><td>2 Build parse tree</td><td>O(n)</td><td>O(n) for the nodes</td><td class="num">10.6</td></tr>
+    <tr><td>3 Traversals recursive</td><td>O(n)</td><td>O(h) for the call stack</td><td class="num">10.8 to 11.6</td></tr>
+    <tr><td>3 Traversals iterative</td><td>O(n)</td><td>O(h) for in order and pre order, O(n) for the second stack of post order</td><td class="num">10.8 to 11.7</td></tr>
+    <tr><td>4 Height recursive</td><td>O(n)</td><td>O(h) for the call stack</td><td class="num">7.3</td></tr>
+    <tr><td>4 Height iterative</td><td>O(n)</td><td>O(n) for the queue in the worst case</td><td class="num">11.7</td></tr>
+    <tr><td>5 Evaluate one row</td><td>O(n log k) since atom values are kept in a map</td><td>O(h) for the call stack and O(k) for the values</td><td class="num">10.7</td></tr>
+    <tr><td>5 Truth table</td><td>O(2<sup>k</sup> &middot; n log k)</td><td>O(k)</td><td class="num">about 2 for each new atom</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Ratio test method</h2>
+  <p>The time complexity is found by experiment. Each task is run on a formula with n nodes and then on a formula with 10n nodes. The time is measured both times and divided.</p>
+  <table>
+    <tr><th>If the ratio is about</th><th>Then the task is</th></tr>
+    <tr><td>10</td><td>O(n) linear</td></tr>
+    <tr><td>100</td><td>O(n<sup>2</sup>) quadratic</td></tr>
+    <tr><td>1000</td><td>O(n<sup>3</sup>) cubic</td></tr>
+  </table>
+  <p>For the truth table, one atom is added each time instead. If the time doubles each time then the table is O(2<sup>k</sup>).</p>
+  <p>The test formula is made by <code>makeFormula(c)</code> in <code>task6.cpp</code>. It has c clauses like <code>(x1+(~x2))</code> joined with <code>*</code> and uses only 100 atoms, so only n changes between the two runs. Run it with menu option 3.</p>
+  <div class="note">Machine used: Windows, MinGW g++ 6.3 with <code>-O2</code>. Times come from <code>clock()</code> which counts in milliseconds, so very small times of 1 or 2 ms are not exact.</div>
+</section>
+
+<section>
+  <h2>Ratio test results</h2>
+  <h3>Tasks 1 to 5 with n = 249999 nodes and 10n = 2499999 nodes</h3>
+  <table>
+    <tr><th>Task</th><th class="num">Time for n (ms)</th><th class="num">Time for 10n (ms)</th><th class="num">Ratio</th></tr>
+    <tr><td>Task 1 infix to prefix</td><td class="num">133</td><td class="num">1449</td><td class="num">10.9</td></tr>
+    <tr><td>Task 2 build tree</td><td class="num">42</td><td class="num">446</td><td class="num">10.6</td></tr>
+    <tr><td>Task 3 in order rec</td><td class="num">17</td><td class="num">197</td><td class="num">11.6</td></tr>
+    <tr><td>Task 3 in order iter</td><td class="num">19</td><td class="num">222</td><td class="num">11.7</td></tr>
+    <tr><td>Task 3 pre order rec</td><td class="num">20</td><td class="num">217</td><td class="num">10.8</td></tr>
+    <tr><td>Task 3 pre order iter</td><td class="num">18</td><td class="num">208</td><td class="num">11.6</td></tr>
+    <tr><td>Task 3 post order rec</td><td class="num">18</td><td class="num">199</td><td class="num">11.1</td></tr>
+    <tr><td>Task 3 post order iter</td><td class="num">22</td><td class="num">238</td><td class="num">10.8</td></tr>
+    <tr><td>Task 4 height rec</td><td class="num">3</td><td class="num">22</td><td class="num">7.3</td></tr>
+    <tr><td>Task 4 height iter</td><td class="num">3</td><td class="num">35</td><td class="num">11.7</td></tr>
+    <tr><td>Task 5 evaluate</td><td class="num">22</td><td class="num">236</td><td class="num">10.7</td></tr>
+  </table>
+  <p class="good">Every ratio is close to 10 so every task is linear in n.</p>
+  <p>The ratios are a little above 10 because a tree with 2.5 million nodes does not fit in the CPU cache, so each node takes slightly longer to reach. Height takes only 3 ms for n, so a 1 ms clock step changes its ratio a lot.</p>
+
+  <h3>Truth table when one atom is added each time</h3>
+  <table>
+    <tr><th class="num">Atoms k</th><th class="num">Rows</th><th class="num">Time (ms)</th><th class="num">Ratio to previous</th></tr>
+    <tr><td class="num">12</td><td class="num">4096</td><td class="num">10</td><td class="num"></td></tr>
+    <tr><td class="num">13</td><td class="num">8192</td><td class="num">27</td><td class="num">2.7</td></tr>
+    <tr><td class="num">14</td><td class="num">16384</td><td class="num">55</td><td class="num">2.0</td></tr>
+    <tr><td class="num">15</td><td class="num">32768</td><td class="num">121</td><td class="num">2.2</td></tr>
+    <tr><td class="num">16</td><td class="num">65536</td><td class="num">238</td><td class="num">2.0</td></tr>
+    <tr><td class="num">17</td><td class="num">131072</td><td class="num">561</td><td class="num">2.4</td></tr>
+    <tr><td class="num">18</td><td class="num">262144</td><td class="num">1235</td><td class="num">2.2</td></tr>
+  </table>
+  <p class="good">The time doubles with each new atom so the truth table is exponential, O(2<sup>k</sup>).</p>
+  <p>At this speed 30 atoms would take about 1.5 hours. The smallest SAT 2002 file used below has 26 atoms and a much bigger tree, so its table would take about an hour. A file with 450 atoms has 2<sup>450</sup> rows, more than the number of atoms in the universe. This is why the program prints the truth table only for formulas with at most 15 atoms.</p>
+</section>
+
+<section>
+  <h2>Results on the SAT 2002 benchmark</h2>
+  <p>The SAT 2002 benchmark from SATLIB has 1964 <code>.cnf</code> files. Eight files were picked from smallest to largest by file size and each one was run with menu option 2. Times are in ms. Task 3 is the total of all six traversals and Task 4 is the total of both height functions.</p>
+  <table>
+    <tr><th>File</th><th class="num">Atoms</th><th class="num">Clauses</th><th class="num">Nodes</th><th class="num">Height</th><th class="num">Task 1</th><th class="num">Task 2</th><th class="num">Task 3</th><th class="num">Task 4</th><th class="num">Task 5</th></tr>
+    <tr><td><code>ca002</code></td><td class="num">26</td><td class="num">70</td><td class="num">441</td><td class="num">11</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td></tr>
+    <tr><td><code>unif-c900-v450</code></td><td class="num">450</td><td class="num">900</td><td class="num">6742</td><td class="num">14</td><td class="num">3</td><td class="num">1</td><td class="num">3</td><td class="num">0</td><td class="num">1</td></tr>
+    <tr><td><code>unif-c1300-v650</code></td><td class="num">650</td><td class="num">1300</td><td class="num">9743</td><td class="num">15</td><td class="num">5</td><td class="num">1</td><td class="num">5</td><td class="num">0</td><td class="num">1</td></tr>
+    <tr><td><code>hgen3-v600</code></td><td class="num">600</td><td class="num">2100</td><td class="num">15746</td><td class="num">16</td><td class="num">8</td><td class="num">3</td><td class="num">7</td><td class="num">0</td><td class="num">2</td></tr>
+    <tr><td><code>glassybp-v699</code></td><td class="num">699</td><td class="num">3262</td><td class="num">24447</td><td class="num">16</td><td class="num">15</td><td class="num">3</td><td class="num">11</td><td class="num">1</td><td class="num">3</td></tr>
+    <tr><td><code>5col180_15_4</code></td><td class="num">540</td><td class="num">7299</td><td class="num">104638</td><td class="num">18</td><td class="num">54</td><td class="num">16</td><td class="num">57</td><td class="num">1</td><td class="num">11</td></tr>
+    <tr><td><code>k2fix_gr_rcs_w9</code></td><td class="num">11313</td><td class="num">305160</td><td class="num">1544407</td><td class="num">25</td><td class="num">815</td><td class="num">267</td><td class="num">892</td><td class="num">47</td><td class="num">311</td></tr>
+    <tr><td><code>cache_10</code></td><td class="num">227210</td><td class="num">879754</td><td class="num">5479586</td><td class="num">28</td><td class="num">3262</td><td class="num">1046</td><td class="num">3177</td><td class="num">152</td><td class="num">2727</td></tr>
+  </table>
+  <h3>What the results show</h3>
+  <ul>
+    <li><b>Output is correct for every file.</b> For all eight files the recursive and iterative traversals gave the same output and both height functions gave the same height.</li>
+    <li><b>Real data is also linear.</b> From <code>5col180_15_4</code> to <code>k2fix_gr_rcs_w9</code> the nodes grow 14.8 times and Task 1 grows 15.1 times. From <code>k2fix_gr_rcs_w9</code> to <code>cache_10</code> the nodes grow 3.5 times and Task 1 grows 4.0 times.</li>
+    <li><b>The tree stays short.</b> <code>readCNF</code> joins clauses as a balanced tree, so the height grows like log n. It goes from 11 to only 28 while the nodes grow from 441 to 5.5 million. This keeps the recursion depth small, so recursive functions never run out of stack.</li>
+    <li><b>Evaluation depends on the number of atoms.</b> In <code>cache_10</code> evaluation takes about 5 times longer than one traversal even though it visits the same nodes. It has 227210 atoms, so each map lookup takes about 18 steps, which is the log k part of O(n log k).</li>
+    <li><b>Task 1 is the slowest step</b> because it works on all tokens including the brackets, which is about 2.2 tokens for each node, and it copies and reverses the token list twice.</li>
+    <li><b>The truth table is skipped for every file</b> because even the smallest file has 26 atoms.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Memory</h2>
+  <p>One <code>Node</code> holds a string and two pointers. With MinGW 32 bit this is 32 bytes and on a 64 bit compiler it is about 48 bytes.</p>
+  <table>
+    <tr><th>File</th><th class="num">Nodes</th><th class="num">Tree memory</th><th class="num">Tokens</th></tr>
+    <tr><td><code>ca002</code></td><td class="num">441</td><td class="num">14 KB</td><td class="num">971</td></tr>
+    <tr><td><code>5col180_15_4</code></td><td class="num">104638</td><td class="num">3.2 MB</td><td class="num">229656</td></tr>
+    <tr><td><code>k2fix_gr_rcs_w9</code></td><td class="num">1544407</td><td class="num">47 MB</td><td class="num">3394983</td></tr>
+    <tr><td><code>cache_10</code></td><td class="num">5479586</td><td class="num">167 MB</td><td class="num">12055606</td></tr>
+  </table>
+  <p>The tree memory grows linearly with n. The token lists need about the same memory again. The stacks used by the iterative functions hold at most h nodes, except post order and level order height which can hold O(n). The truth table needs only O(k) extra memory because it builds one row at a time and does not store the table.</p>
+</section>
+
+<footer>CS F214 Assignment 1 Part A</footer>
+</main>
+</body>
+</html>

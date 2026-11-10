@@ -1,0 +1,18 @@
+# Doxygen settings for Part A
+# Run doxygen in this folder to make the html in Doxygen_HTML
+
+PROJECT_NAME     = "CS F214 Assignment 1 Part A"
+PROJECT_BRIEF    = "Propositional logic parse trees"
+OUTPUT_DIRECTORY = ../Doxygen_HTML
+INPUT            = .
+FILE_PATTERNS    = *.cpp
+RECURSIVE        = NO
+EXTRACT_ALL      = YES
+SOURCE_BROWSER   = YES
+GENERATE_HTML    = YES
+HTML_OUTPUT      = html
+GENERATE_LATEX   = NO
+GENERATE_TREEVIEW = YES
+HAVE_DOT         = NO
+QUIET            = YES
+WARN_IF_UNDOCUMENTED = NO

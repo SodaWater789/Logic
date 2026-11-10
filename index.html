@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS F214 Assignment 1 Part A</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="tag">CS F214 Logic in Computer Science &middot; Assignment 1 &middot; Part A</div>
+  <h1>Propositional Logic Parse Trees</h1>
+  <p>A C++ program that reads a propositional formula, builds its parse tree and runs every task of Part A on it</p>
+  <nav>
+    <a class="active" href="index.html">Overview</a>
+    <a href="analysis.html">Analysis and Results</a>
+    <a href="../Doxygen_HTML/html/index.html">Doxygen Documentation</a>
+  </nav>
+</header>
+
+<main>
+
+<section>
+  <h2>Connectives</h2>
+  <div class="cards">
+    <div class="card"><div class="sym">~</div>not</div>
+    <div class="card"><div class="sym">+</div>or</div>
+    <div class="card"><div class="sym">*</div>and</div>
+    <div class="card"><div class="sym">&gt;</div>implies</div>
+  </div>
+  <p>The formula is assumed to be well formed and fully bracketed like <code>((p+q)*(~r))</code>. Atom names can have more than one letter like <code>x12</code>.</p>
+</section>
+
+<section>
+  <h2>Input</h2>
+  <p>There are two input methods as asked in the course post</p>
+  <table>
+    <tr><th>Menu option</th><th>Function</th><th>What it does</th></tr>
+    <tr><td>1</td><td><code>readInfix()</code></td><td>Reads a formula typed in infix</td></tr>
+    <tr><td>2</td><td><code>readCNF(path)</code></td><td>Reads a DIMACS <code>.cnf</code> file from the SAT 2002 benchmark and turns it into one infix formula. Literals of a clause are joined with <code>+</code> and clauses are joined with <code>*</code>. A negative number <code>-k</code> becomes <code>(~xk)</code>. The full output is saved in <code>output.txt</code> so that the long lines are easy to read.</td></tr>
+    <tr><td>3</td><td><code>ratioTest()</code></td><td>Runs the ratio test that finds the time complexity of every task</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Files and tasks</h2>
+  <table>
+    <tr><th>File</th><th>Task</th><th>Functions</th></tr>
+    <tr><td><code>common.cpp</code></td><td>Shared</td><td><code>Node</code>, <code>newNode</code>, <code>isOp</code>, <code>join</code>, <code>show</code></td></tr>
+    <tr><td><code>task1.cpp</code></td><td>1 Infix to prefix</td><td><code>tokenize</code>, <code>infixToPrefix</code></td></tr>
+    <tr><td><code>task2.cpp</code></td><td>2 Prefix to parse tree</td><td><code>buildTree</code>, <code>printTree</code>, <code>deleteTree</code></td></tr>
+    <tr><td><code>task3.cpp</code></td><td>3 Traversals</td><td><code>inorderRec</code>, <code>inorderIter</code>, <code>preorderRec</code>, <code>preorderIter</code>, <code>postorderRec</code>, <code>postorderIter</code></td></tr>
+    <tr><td><code>task4.cpp</code></td><td>4 Height</td><td><code>heightRec</code>, <code>heightIter</code></td></tr>
+    <tr><td><code>task5.cpp</code></td><td>5 Evaluation and truth table</td><td><code>evaluate</code>, <code>getAtoms</code>, <code>truthTable</code></td></tr>
+    <tr><td><code>task6.cpp</code></td><td>6 Time and ratio test</td><td><code>start</code>, <code>stop</code>, <code>printTimes</code>, <code>ratioTest</code></td></tr>
+    <tr><td><code>input.cpp</code></td><td>Input</td><td><code>readInfix</code>, <code>readCNF</code>, <code>joinBalanced</code></td></tr>
+    <tr><td><code>main.cpp</code></td><td>Runs all tasks</td><td><code>main</code></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>How it works</h2>
+  <ol>
+    <li><b>Task 1</b> splits the formula into tokens. To get prefix it reverses the tokens, swaps the brackets, makes postfix with a stack and reverses again.</li>
+    <li><b>Task 2</b> reads the prefix from right to left. An atom is pushed on a stack as a leaf. A connective pops its children from the stack. The only child of <code>~</code> is kept in <code>right</code> so that in order prints <code>(~p)</code>.</li>
+    <li><b>Task 3</b> does in order, pre order and post order traversals. Each one is written with recursion and with a stack. In order with brackets gives back the input formula.</li>
+    <li><b>Task 4</b> finds the height with recursion and with a queue that goes level by level. A single atom has height 1.</li>
+    <li><b>Task 5</b> evaluates the tree bottom up. Both children are evaluated first and then the connective is applied. The truth table tries all 2<sup>k</sup> rows for k atoms.</li>
+    <li><b>Task 6</b> times every task and finds the time complexity with the ratio test. See <a href="analysis.html">Analysis and Results</a>.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>How to run</h2>
+  <p><code>main.cpp</code> includes every other file so only this one file is compiled</p>
+<pre>g++ -O2 main.cpp -o logic
+logic</pre>
+  <p>The truth table is printed when the formula has at most 15 atoms, which is 32768 rows. A SAT 2002 file has hundreds of atoms and 2<sup>450</sup> rows can never be printed, so for those files the program uses random truth values for the evaluation and skips the table.</p>
+</section>
+
+<section>
+  <h2>Sample run</h2>
+  <p>Input <code>((p+q)*(~r))</code> with p = 1, q = 0, r = 1</p>
+<pre>Task 1 Infix to Prefix
+Infix  : ((p+q)*(~r))
+Prefix : * + p q ~ r
+
+Task 2 Parse Tree
+Nodes : 6
+Root  : *
+Tree drawn sideways with the root on the left
+        r
+    ~
+*
+        q
+    +
+        p
+
+Task 3 Traversals
+In order   rec  : ((p+q)*(~r))
+In order   iter : ((p+q)*(~r))
+Pre order  rec  : * + p q ~ r
+Pre order  iter : * + p q ~ r
+Post order rec  : p q + r ~ *
+Post order iter : p q + r ~ *
+Recursive and iterative give the same output : yes
+
+Task 4 Height
+Height rec  : 3
+Height iter : 3
+
+Task 5 Evaluation and Truth Table
+Atoms : p q r
+Value : F
+
+Truth table
+p q r | Result
+T T T | F
+T T F | T
+T F T | F
+T F F | T
+F T T | F
+F T F | T
+F F T | F
+F F F | F
+True in 3 of 8 rows so the formula is satisfiable but not valid</pre>
+  <p>More checks that were run</p>
+  <table>
+    <tr><th>Input</th><th>Prefix</th><th>Height</th><th>Truth table result</th></tr>
+    <tr><td><code>((p+q)*(~r))</code></td><td><code>* + p q ~ r</code></td><td>3</td><td>3 of 8 true, satisfiable</td></tr>
+    <tr><td><code>((p&gt;q)&gt;((~q)&gt;(~p)))</code></td><td><code>&gt; &gt; p q &gt; ~ q ~ p</code></td><td>4</td><td>4 of 4 true, valid</td></tr>
+    <tr><td><code>(~(~(x12*y)))</code></td><td><code>~ ~ * x12 y</code></td><td>4</td><td>1 of 4 true, satisfiable</td></tr>
+  </table>
+</section>
+
+<footer>CS F214 Assignment 1 Part A</footer>
+</main>
+</body>
+</html>

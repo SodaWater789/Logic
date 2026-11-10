@@ -1,0 +1,29 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #f3f5f9; color: #1c2638; font: 16px/1.6 "Segoe UI", system-ui, sans-serif; }
+header { background: linear-gradient(120deg, #172440, #2f4aa8); color: #fff; padding: 48px max(24px, calc((100% - 1000px) / 2)) 0; }
+header p { color: #d6ddf7; max-width: 700px; margin: 8px 0 24px; }
+h1 { margin: 6px 0; font-size: 2.4rem; line-height: 1.15; }
+.tag { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem; font-weight: 700; color: #b8c5f5; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a { color: #dfe5fb; text-decoration: none; padding: 10px 16px; border-radius: 10px 10px 0 0; font-weight: 600; }
+nav a:hover { background: #ffffff1f; }
+nav a.active { background: #f3f5f9; color: #1c2638; }
+main { max-width: 1000px; margin: 24px auto 64px; padding: 0 24px; }
+section { background: #fff; border: 1px solid #e1e6ef; border-radius: 14px; padding: 22px 26px; margin: 18px 0; box-shadow: 0 6px 20px #1c26380a; }
+h2 { margin: 0 0 12px; font-size: 1.3rem; color: #172440; }
+h3 { margin: 18px 0 8px; font-size: 1.05rem; color: #2f4aa8; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 10px; }
+.card { border: 1px solid #e1e6ef; border-radius: 12px; padding: 14px; background: #f8f9fc; }
+.sym { font: 700 1.5rem Consolas, monospace; color: #2f4aa8; }
+table { width: 100%; border-collapse: collapse; margin: 8px 0 4px; font-size: 0.95rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e6eaf2; vertical-align: top; }
+th { background: #f3f5fa; color: #4c5a75; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+code, pre { font-family: Consolas, "Courier New", monospace; }
+code { background: #eef1f8; padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
+pre { background: #121b2e; color: #e8edff; padding: 16px; border-radius: 10px; overflow-x: auto; font-size: 0.9rem; line-height: 1.45; }
+.note { border-left: 4px solid #2f4aa8; background: #f1f4fd; padding: 10px 14px; border-radius: 6px; margin: 12px 0; }
+.good { color: #18794e; font-weight: 600; }
+ol li { margin: 6px 0; }
+a { color: #2f4aa8; }
+footer { text-align: center; color: #6b7891; font-size: 0.9rem; margin-top: 28px; }
